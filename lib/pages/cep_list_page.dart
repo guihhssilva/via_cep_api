@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:via_cep_api/models/via_cep_model.dart';
+import 'package:via_cep_api/repositories/via_cep_repository.dart';
 
 class CepListPage extends StatefulWidget {
   const CepListPage({super.key});
@@ -8,6 +10,9 @@ class CepListPage extends StatefulWidget {
 }
 
 class _CepListPageState extends State<CepListPage> {
+  TextEditingController searchController = TextEditingController();
+  ViaCepRepository viaCepRepository = ViaCepRepository();
+  ViaCepModel viaCepModel = ViaCepModel();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -27,13 +32,17 @@ class _CepListPageState extends State<CepListPage> {
                       "Pesquisa de CEP: ",
                       style: TextStyle(color: Color.fromARGB(255, 41, 95, 69)),
                     ),
-                    content: const TextField(
-                      keyboardType: TextInputType.numberWithOptions(),
+                    content: TextField(
+                      controller: searchController,
+                      keyboardType: const TextInputType.numberWithOptions(),
                       maxLength: 8,
                     ),
                     actions: [
                       IconButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            var cep = searchController.text.toString();
+                            await viaCepRepository.getCep(cep);
+                          },
                           icon: const Icon(
                             Icons.search,
                             color: Colors.greenAccent,
